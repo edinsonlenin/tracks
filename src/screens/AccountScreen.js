@@ -1,12 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet, Button } from "react-native";
 
-const AccountScreen = props => {
-    return <Text style={{fontSize: 48}}>Account Screen</Text>;
+const AccountScreen = ({ route, navigation }) => {
+  const { loguear } = route.params;
+  return (
+    <>
+      <Text style={{ fontSize: 48 }}>Account Screen</Text>
+      <Button title="Close Session" onPress={() => loguear(false)} />
+    </>
+  );
 };
 
-const styles = StyleSheet.create({
-
-});
+const styles = StyleSheet.create({});
 
 export default AccountScreen;

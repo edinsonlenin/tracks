@@ -9,18 +9,10 @@ import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Provider as AuthProvider } from "./src/context/AuthContext";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
-function LoginFlow() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Signup" component={SignupScreen} />
-      <Stack.Screen name="Signin" component={SigninScreen} />
-    </Stack.Navigator>
-  );
-}
 
 const TrackListFlow = () => (
   <Stack.Navigator>
@@ -29,19 +21,40 @@ const TrackListFlow = () => (
   </Stack.Navigator>
 );
 
-const MainFlow = () => (
-  <Tab.Navigator>
-    <Tab.Screen name="TrackListFlow" component={TrackListFlow} />
-    <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
-    <Tab.Screen name="Account" component={AccountScreen} />
-  </Tab.Navigator>
-);
-
 export default function App() {
   const [isLogued, setIsLogued] = useState(false);
+  const loguear = (value) => {
+    setIsLogued(value);
+  };
+  const MainFlow = () => (
+    <Tab.Navigator>
+      <Tab.Screen name="TrackListFlow" component={TrackListFlow} />
+      <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
+      <Tab.Screen
+        name="Account"
+        component={AccountScreen}
+        initialParams={{ loguear: loguear }}
+      />
+    </Tab.Navigator>
+  );
+  const LoginFlow = (props) => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Signup"
+          component={SignupScreen}
+          options={{ headerShown: false }}
+          initialParams={{ loguear: loguear }}
+        />
+        <Stack.Screen name="Signin" component={SigninScreen} />
+      </Stack.Navigator>
+    );
+  };
   return (
-    <NavigationContainer>
-      {isLogued ? MainFlow() : LoginFlow()}
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        {isLogued ? MainFlow() : LoginFlow()}
+      </NavigationContainer>
+    </AuthProvider>
   );
 }

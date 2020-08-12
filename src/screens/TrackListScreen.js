@@ -1,12 +1,15 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { View, Text, StyleSheet, Button } from "react-native";
 
-const TrackListScreen = props => {
-    return <Text style={{fontSize: 48}}>Track List Screen</Text>;
+const TrackListScreen = ({ navigation }) => {
+  return (
+    <>
+      <Text style={{ fontSize: 48 }}>Track List Screen</Text>
+      <Button title="Go to Details" onPress={() => navigation.navigate('TrackDetail')} />
+    </>
+  );
 };
 
-const styles = StyleSheet.create({
-
-});
+const styles = StyleSheet.create({});
 
 export default TrackListScreen;
