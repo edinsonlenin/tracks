@@ -1,27 +1,46 @@
 import createDataContext from "./createDataContext";
-import trackerApi from '../api/tracker';
+import trackerApi from "../api/tracker";
+import { AsyncStorage } from "react-native";
+import * as RootNavigation from '../navigationRef';
 
 const authReducer = (state, action) => {
   switch (action.type) {
+    case "add_error":
+      return { ...state, errorMessage: action.payload };
+    case "signup":
+      return { errorMessage: "", token: action.payload };
+    case "signout":
+      return { errorMessage: "", token: null };
     default:
       return state;
   }
 };
 
-const signup = dispatch => {
-  return async ({email, password}) => {
-    try{
-      const response = await trackerApi.post('/signup', {email, password});
-      console.log(response.data);
-    }
-    catch(error){
-      console.log(error.message);
-    }
-  };
+const signup = (dispatch) => async ({ email, password }) => {
+  try {
+    console.log(email, password);
+    const response = await trackerApi.post("/signup", { email, password });
+    await AsyncStorage.setItem("token", response.data.token);
+    dispatch({ type: "signup", payload: response.data.token });
+    //RootNavigation.navigate('Signin');
+  } catch (error) {
+    console.log(error.response.data);
+    dispatch({ type: "add_error", payload: "Ocurred an error in Signup" });
+  }
 };
 
-export const {Provider, Context } = createDataContext(
+const signout = (dispatch) => async () => {
+  try {
+    console.log("sigout en conte4xt");
+    await AsyncStorage.removeItem("token");
+    dispatch({ type: "signout" });
+  } catch (error) {
+    dispatch({ type: "add_error", payload: "Ocurred an error in Signout" });
+  }
+};
+
+export const { Provider, Context } = createDataContext(
   authReducer,
-  {signup},
-  { isSignedIn: false }
+  { signup, signout },
+  { token: null, errorMessage: "" }
 );

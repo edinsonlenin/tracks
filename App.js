@@ -9,7 +9,11 @@ import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Provider as AuthProvider } from "./src/context/AuthContext";
+import { Provider as AuthProvider, Context as AuthContext } from "./src/context/AuthContext";
+import { AsyncStorage } from "react-native";
+import { navigationRef } from './src/navigationRef';
+
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -21,30 +25,31 @@ const TrackListFlow = () => (
   </Stack.Navigator>
 );
 
-export default function App() {
+export default function  App() {
   const [isLogued, setIsLogued] = useState(false);
-  const loguear = (value) => {
-    setIsLogued(value);
-  };
-  const MainFlow = () => (
-    <Tab.Navigator>
-      <Tab.Screen name="TrackListFlow" component={TrackListFlow} />
-      <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
-      <Tab.Screen
-        name="Account"
-        component={AccountScreen}
-        initialParams={{ loguear: loguear }}
-      />
-    </Tab.Navigator>
-  );
+
+  const MainFlow = () => {
+    return (
+      <Tab.Navigator>
+        <Tab.Screen name="TrackListFlow" component={TrackListFlow} />
+        <Tab.Screen name="TrackCreate" component={TrackCreateScreen} />
+        <Tab.Screen
+          name="Account"
+          component={AccountScreen}
+          initialParams={{setIsLogued}}
+        />
+      </Tab.Navigator>
+    );
+  }
+
   const LoginFlow = (props) => {
     return (
       <Stack.Navigator>
         <Stack.Screen
           name="Signup"
           component={SignupScreen}
+          initialParams={{setIsLogued}}
           options={{ headerShown: false }}
-          initialParams={{ loguear: loguear }}
         />
         <Stack.Screen name="Signin" component={SigninScreen} />
       </Stack.Navigator>
@@ -52,7 +57,7 @@ export default function App() {
   };
   return (
     <AuthProvider>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         {isLogued ? MainFlow() : LoginFlow()}
       </NavigationContainer>
     </AuthProvider>
