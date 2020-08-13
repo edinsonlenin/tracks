@@ -39,8 +39,18 @@ const signout = (dispatch) => async () => {
   }
 };
 
+const signin = (dispatch) => async () => {
+  try {
+    console.log("sigout en conte4xt");
+    await AsyncStorage.removeItem("token");
+    dispatch({ type: "signout" });
+  } catch (error) {
+    dispatch({ type: "add_error", payload: "Ocurred an error in Signout" });
+  }
+};
+
 export const { Provider, Context } = createDataContext(
   authReducer,
-  { signup, signout },
+  { signup, signout, signin },
   { token: null, errorMessage: "" }
 );

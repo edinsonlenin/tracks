@@ -9,11 +9,12 @@ import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Provider as AuthProvider, Context as AuthContext } from "./src/context/AuthContext";
+import {
+  Provider as AuthProvider,
+  Context as AuthContext,
+} from "./src/context/AuthContext";
 import { AsyncStorage } from "react-native";
-import { navigationRef } from './src/navigationRef';
-
-
+import { navigationRef } from "./src/navigationRef";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -25,7 +26,7 @@ const TrackListFlow = () => (
   </Stack.Navigator>
 );
 
-export default function  App() {
+export default function App() {
   const [isLogued, setIsLogued] = useState(false);
 
   const MainFlow = () => {
@@ -36,11 +37,11 @@ export default function  App() {
         <Tab.Screen
           name="Account"
           component={AccountScreen}
-          initialParams={{setIsLogued}}
+          initialParams={{ setIsLogued }}
         />
       </Tab.Navigator>
     );
-  }
+  };
 
   const LoginFlow = (props) => {
     return (
@@ -48,10 +49,15 @@ export default function  App() {
         <Stack.Screen
           name="Signup"
           component={SignupScreen}
+          initialParams={{ setIsLogued }}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Signin"
+          component={SigninScreen}
           initialParams={{setIsLogued}}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Signin" component={SigninScreen} />
       </Stack.Navigator>
     );
   };
